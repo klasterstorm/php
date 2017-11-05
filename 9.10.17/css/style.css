@@ -22,3 +22,25 @@ body {
   cursor: pointer; }
   .aside-cell:hover {
     box-shadow: 2px 2px 18px -2px transparent; }
+
+.tabs {
+  margin: inherit;
+  border: 0;
+  background-color: transparent;
+  color: black; }
+  .tabs-title:hover {
+    background-color: rgba(158, 208, 203, 0.5);
+    box-shadow: 2px 2px 18px -2px transparent; }
+  .tabs-title > a {
+    color: black; }
+    .tabs-title > a:hover {
+      background-color: rgba(158, 208, 203, 0.5);
+      box-shadow: 2px 2px 18px -2px rgba(0, 0, 0, 0.75);
+      color: black; }
+  .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
+    background-color: rgba(158, 208, 203, 0.5);
+    box-shadow: 2px 2px 18px -2px transparent;
+    color: black; }
+    .tabs-title > a:focus:hover, .tabs-title > a[aria-selected='true']:hover {
+      background-color: rgba(158, 208, 203, 0.5);
+      box-shadow: 2px 2px 18px -2px transparent; }
