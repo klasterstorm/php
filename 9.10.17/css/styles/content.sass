@@ -1,0 +1,51 @@
+.content
+    &-input
+        border: 2px $mainColor solid
+        padding: 10px
+        width: 100%
+        margin-bottom: 10px
+    &-button
+        background-color: $mainColor
+        padding: 10px
+        color: white
+        cursor: pointer
+        box-shadow: $shadow
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1)
+        margin-bottom: 10px
+        width: 100%
+        &:hover
+            box-shadow: $hoverShadow
+    &-checkBox
+        padding: 6px
+        background-color: $secColor
+        margin-bottom: 10px
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1)
+        box-shadow: $shadow
+        &:hover
+            box-shadow: $hoverShadow
+        >#amountTrue
+            margin: 0
+    &-errorBoard
+        background-color: $errorColor
+        color: white
+        font-size: 20px
+        font-weight: bold
+        text-align: center
+        box-shadow: $shadow
+        padding: 20px
+        letter-spacing: 3px
+    &-successBoard
+        background-color: $mainColor
+        color: white
+        font-size: 30px
+        font-weight: bold
+        text-align: center
+        box-shadow: $shadow
+        padding: 30px
+    &-table
+        margin-top: 20px
+        > table > thead > tr > th
+            background-color: $mainColor
+            color: white
+        > table > tbody > tr:nth-child(even)
+            background-color: $secColor
