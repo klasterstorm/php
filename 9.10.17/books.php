@@ -28,7 +28,7 @@
 						</a>
 					<div class="medium-12 large-12 cell aside-category">Операции над выдечей</div>
 						<a href="getting.php" class="medium-12 large-12 cell aside-cell">
-							Выдача
+							Выдача книги
 						</a>
 					</div>
 				</div>

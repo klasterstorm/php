@@ -34,18 +34,35 @@
         box-shadow: $shadow
         padding: 20px
         letter-spacing: 3px
-    &-successBoard
-        background-color: $mainColor
+    &-succsessBoard
+        background-color: $succsessColor
         color: white
-        font-size: 30px
+        font-size: 20px
         font-weight: bold
         text-align: center
         box-shadow: $shadow
-        padding: 30px
+        padding: 20px
+        letter-spacing: 3px
+    &-systemBoard
+        background-color: #4b5d62
+        color: white
+        font-size: 20px
+        font-weight: bold
+        text-align: center
+        box-shadow: $shadow
+        padding: 20px
+        letter-spacing: 3px
     &-table
         margin-top: 20px
-        > table > thead > tr > th
-            background-color: $mainColor
-            color: white
-        > table > tbody > tr:nth-child(even)
-            background-color: $secColor
+        text-align: center
+        &-header
+            > table > thead > tr > th
+                background-color: $mainColor
+                color: white
+                text-align: center
+        &-rowColor
+            > table > tbody > tr:nth-child(even)
+                background-color: $tableRowColor
+        &-errorRow
+                background-color: $errorColor !important
+                color: white

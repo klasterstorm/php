@@ -28,7 +28,7 @@
 						</a>
 					<div class="medium-12 large-12 cell aside-category">Операции над выдечей</div>
 						<a href="getting.php" class="medium-12 large-12 cell aside-cell-active">
-							Выдача
+							Выдача книги
 						</a>
 					</div>
 				</div>
@@ -44,8 +44,12 @@
 								<input class="content-input" name="id_book" placeholder="ID Книги" value="" aria-describedby="name-format">
 							</div>
 
-							<div class="medium-3 large-3 cell">
-								<button class="content-button" type="submit" value="Submit">Выдать</button>
+							<div class="medium-6 large-6 cell">
+								<input class="content-input" name="date_e" type="date" placeholder="Дата возврата книги"  value="" aria-describedby="name-format">
+							</div>
+
+							<div class="medium-6 large-6 cell">
+								<button class="content-button" type="submit" value="Submit">Выдать книгу</button>
 							</div>
 
 						</div>
@@ -56,30 +60,78 @@
 						$dbh = dboConnect();
 
 						if (!empty($_POST)){
-							$id = $_POST['id'];
-							$id_author = $_POST['id_author'];
-							$title = $_POST['title'];
-							$id_genre = $_POST['id_genre'];
-							$amount = $_POST['amount'];
+							$id_reader = $_POST['id_reader'];
+							$id_book = $_POST['id_book'];
+							$date_e = $_POST['date_e'];
 
-							$sql = "SELECT * FROM books WHERE 
-								 id = CASE WHEN '$id' <> '' THEN '$id' ELSE id END
-								 AND id_author = CASE WHEN '$id_author' <> '' THEN '$id_author' ELSE id_author END
-								 AND title = CASE WHEN '$title' <> '' THEN '$title' ELSE title END
-								 AND id_genre = CASE WHEN '$id_genre' <> '' THEN '$id_genre' ELSE id_genre END
-								 AND amount > CASE WHEN '$amount' = 'on' THEN 0 ELSE -1 END
-							";
+							//Проверка на заполнение полей
+							if ($id_reader <> '' && $id_book <> '' && $date_e <> '') {
 
-							$result = pushSQLtoDB($dbh, $sql);
+								$sql = "SELECT * FROM books,readers WHERE 
+								books.id = '$id_book'
+								AND readers.id = '$id_reader'
+								";
+	
+								$result = pushSQLtoDB($dbh, $sql);
 
-							$titleForTable = array(
-								"id"    => "ID",
-								"id_author"  => "ID Автора",
-								"title"  => "Название книги",
-								"id_genre"  => "ID Жанра",
-								"amount"  => "Колличество"
-							);
-							getTable($result, $titleForTable);
+
+								//Проверка на книгу и читателя
+								if($result <> NULL) {
+									$sql = "SELECT books.amount FROM books WHERE 
+									books.id = '$id_book'
+									AND books.amount > 0
+									";
+									$result = pushSQLtoDB($dbh, $sql);
+
+									//Проверка на книгу и колличество книг
+									if($result <> NULL) {
+										//Отнимаем книгу
+										$sql = "UPDATE books SET books.amount = books.amount - 1 WHERE books.id = '$id_book'";
+										setSQLtoDB($dbh, $sql);
+
+										$sql = "INSERT INTO issue (id_reader, id_book, date_s, date_e) VALUES ($id_reader, $id_book, '$date', $date_e)";
+										setSQLtoDB($dbh, $sql);
+
+
+										date_default_timezone_set('Asia/Vladivostok');
+										$date = date('Y-m-d', time());
+
+										//Выводим
+										$sql = "SELECT * FROM issue WHERE
+										issue.id_reader = '$id_reader'
+										AND issue.id_book = '$id_book'
+										";
+										$result = pushSQLtoDB($dbh, $sql);
+										var_dump($result);
+										getSuccsess('Книга выдана');
+										$titleForTable = array(
+											"id_reader" =>	"id_readerID",
+											"id_book" =>	"id_book",
+											"date_s" =>	"date_s",
+											"date_e" =>	"date_e",
+											"id"	=>	"id",
+											"id_author"	=>	"id_author",
+											"title" =>	"title",
+											"id_genre"	=>	"id_genre",
+											"price"	=>	"price",
+											"amount"	=>	"amount",
+										);
+										getTable($result, $titleForTable);
+									}
+									else {
+										getError("Увы, данные книги у нас закончились...");
+									}
+								}
+								else {
+									getError("Упс, кажется у нас нет информации по вашим данным...");
+								}
+							}
+							else {
+								getError("Необходимо заполнить все поля!");
+							}	
+						}
+						else {
+							getSystem("Введите данные");
 						}
 					?>
 
