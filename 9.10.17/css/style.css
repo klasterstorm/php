@@ -127,7 +127,9 @@ body {
   letter-spacing: 3px; }
 .content-table {
   margin-top: 20px;
-  text-align: center; }
+  text-align: center;
+  -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
   .content-table-header > table > thead > tr > th {
     background-color: #26A69A;
     color: white;
