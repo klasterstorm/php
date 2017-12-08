@@ -18,22 +18,15 @@
 				<!-- Меню -->
 				<div class="medium-3 large-3 cell aside">
 					<div class="grid-x grid-margin-x">
-						<div class="medium-12 large-12 cell aside-category">Операции над книгами</div>
-							<a href="books.php" class="medium-12 large-12 cell aside-cell">
-								Книги
-							</a>
-						<div class="medium-12 large-12 cell aside-category">Операции над читателями</div>
-							<a href="readers.php" class="medium-12 large-12 cell aside-cell">
-								Читатели
-							</a>
-						<div class="medium-12 large-12 cell aside-category">Операции над выдечей</div>
-							<a href="getting.php" class="medium-12 large-12 cell aside-cell">
-								Выдача
-							</a>
+						<?php include('header.html'); ?>
 					</div>
 				</div>
 				<!-- Контент -->
 				<div class="medium-9 large-9 cell">
+					<?php
+						@include 'extension.php';
+						getSuccsess("Для начала работы выберите пункт меню");
+					?>
 				</div>
 			</div>
 		</div>

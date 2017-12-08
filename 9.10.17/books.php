@@ -25,6 +25,7 @@
 			</div>
 			<!-- Контент -->
 			<div class="medium-9 large-9 cell">
+				<h3 class="medium-9 large-9 cell content-title">Поиск книги</h3>
 				<form action="books.php" method="post">
 					<div class="grid-x grid-margin-x">
 						<div class="small-12 medium-6 large-6 cell">
@@ -68,7 +69,7 @@
 							$amount = $_POST['amount'];
 
 							$sql = "SELECT books.title, books.amount, books.price, authors.name AS author, 
-								genre.name AS genre FROM books 
+								genre.name AS genre FROM books
         						CROSS JOIN authors ON books.id_author = authors.id
         						CROSS JOIN genre ON books.id_genre = genre.id
 								WHERE authors.name = CASE WHEN '$author' <> '' THEN '$author' ELSE authors.name END
@@ -83,7 +84,7 @@
 							$titleForTable = array(
 								"author"  => "Автор",
 								"title"  => "Название книги",
-								"genre"  => "Название жанра",
+								"genre"  => "Жанр",
 								"amount"  => "Количество",
 								"price"  => "Цена"
 							);

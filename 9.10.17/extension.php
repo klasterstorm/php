@@ -51,6 +51,7 @@
     //Вывод таблицы
     function getTable($result, $titleForTable) {
 
+        //Так выглядит вызов этой функции
         // $titleForTable = array(
         //     "id"    => "ID",
         //     "name"  => "Название",
@@ -59,11 +60,10 @@
         // );
         // getTable($result, $titleForTable);
 
-
         $keys = array_keys($titleForTable);
 
         if (!empty($result)){
-            echo '<div class="grid-x grid-margin-x">
+            echo '<div class="grid-x grid-margin-x content-container">
                 <div class="small-12 medium-12 large-12 cell content-table content-table-rowColor content-table-header">
                 <table>
                     <thead>
@@ -92,7 +92,7 @@
             </div>';
         }
         else {
-            getError("Не удается построить таблицу по пустому запросу");
+            getError("Упс, кажется у нас нет информации по вашим данным...");
         }
     }
 
