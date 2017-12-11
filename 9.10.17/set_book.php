@@ -44,15 +44,8 @@
 							<input class="content-input" name="price" placeholder="Цена" value="" aria-describedby="name-format">
 						</div>
 
-						<!-- <div class="small-12 medium-6 large-6 cell">
-							<div class="content-checkBox">
-								<input id="amountTrue" name="amount" type="checkbox">
-								<label for="amountTrue">Наличие</label>
-							</div>
-						</div> -->
-
 						<div class="small-12 medium-3 large-3 cell">
-							<button class="content-button" type="submit" value="Submit">Поиск</button>
+							<button class="content-button" type="submit" value="Submit">Добавить</button>
 						</div>
 					</div>
 				</form>
@@ -76,7 +69,7 @@
 						$result = pushSQLtoDB($dbh, $sql);
 
 						//Заполнение полей
-						if($author && $title && $genre && $price){
+						if($author && $title){
 
 							//Существует ли книга с таким Автором и Жанром
 							if($result) {
@@ -86,6 +79,20 @@
 									"author"  => "Автор",
 									"title"  => "Название книги",
 								);
+
+								$sql = "SELECT books.id, books.title, authors.name AS author FROM books
+									CROSS JOIN authors ON books.id_author = authors.id
+									WHERE authors.name = CASE WHEN '$author' <> '' THEN '$author' ELSE authors.name END
+									AND books.title = CASE WHEN '$title' <> '' THEN '$title' ELSE books.title END
+								";
+								$result = pushSQLtoDB($dbh, $sql);
+								$id_book = getValue($result, 'id');
+								
+								//Увеличиваем кол-во книг
+								$sql = "UPDATE books SET books.amount = books.amount + 1 WHERE books.id = '$id_book'";
+								pushSQLtoDB($dbh, $sql);
+
+								getSuccsess('Количество данных книг увеличино');
 								getTable($result, $titleForTable);
 							}
 							else {
