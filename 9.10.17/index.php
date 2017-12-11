@@ -25,6 +25,7 @@
 				<div class="medium-9 large-9 cell">
 					<?php
 						@include 'extension.php';
+						getSuccsess("Добро пожаловать!");
 						getSuccsess("Для начала работы выберите пункт меню");
 					?>
 				</div>

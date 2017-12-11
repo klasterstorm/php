@@ -48,16 +48,27 @@
         </div>';
     }
 
+    //Получение значения по ключу
+    function getValue($result, $key) {
+        foreach($result as $row) {
+            return $row[$key];
+        }
+    }
+
     //Вывод таблицы
     function getTable($result, $titleForTable) {
 
         //Так выглядит вызов этой функции
+
+        //Ключи для построения/именования таблицы
         // $titleForTable = array(
         //     "id"    => "ID",
         //     "name"  => "Название",
         //     "email"  => "Почта",
         //     "phone"  => "Номер телефона",
         // );
+
+        //Вызов построителя таблицы
         // getTable($result, $titleForTable);
 
         $keys = array_keys($titleForTable);
@@ -66,30 +77,35 @@
             echo '<div class="grid-x grid-margin-x content-container">
                 <div class="small-12 medium-12 large-12 cell content-table content-table-rowColor content-table-header">
                 <table>
-                    <thead>
-                    <tr>';
+                <thead>
+                <tr>';
             foreach($titleForTable as $index) {
                 echo '<th>',$index ,'</th>';
             }
             echo '</tr>
-                    </thead>
-                    <tbody>';
+                </thead>
+                <tbody>';
             foreach($result as $row) {
                 echo '<tr>';
                 foreach($keys as $index) {
-                    if(is_numeric($row[$index]) && $row[$index] == 0){
+                    if ($row['date_s'] <> NULL && $row['date_s'] < date('Y-m-d', strtotime("-3 days"))) {
                         echo '<td class="content-table-errorRow">',$row[$index] ,'</td>';
                     }
                     else {
-                        echo '<td>',$row[$index] ,'</td>';
+                        if(is_numeric($row['amount']) && $row['amount'] == 0){
+                            echo '<td class="content-table-errorRow">',$row[$index] ,'</td>';
+                        }
+                        else {
+                            echo '<td>',$row[$index] ,'</td>';
+                        }
                     }
                 }
                 echo '</tr>';
             }
             echo '</tbody>
-            </table>
-            </div>
-            </div>';
+                </table>
+                </div>
+                </div>';
         }
         else {
             getError("Упс, кажется у нас нет информации по вашим данным...");
