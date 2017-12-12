@@ -70,6 +70,7 @@
 									SET issue.date_e = '$date'
 									WHERE issue.id_book = '$id_book'
 									AND issue.id_reader = '$id_reader'
+									AND issue.date_e IS NULL LIMIT 1
 								";
 								pushSQLtoDB($dbh, $sql);
 
