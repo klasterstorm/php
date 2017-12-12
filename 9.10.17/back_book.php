@@ -60,7 +60,8 @@
 							";
 
 							$result = pushSQLtoDB($dbh, $sql);
-				
+							
+							//Сущетствует ли такое поле
 							if($result) {
 								date_default_timezone_set('Asia/Vladivostok');
 								$date = date('Y-m-d', time());
@@ -70,8 +71,14 @@
 									WHERE issue.id_book = '$id_book'
 									AND issue.id_reader = '$id_reader'
 								";
-
 								pushSQLtoDB($dbh, $sql);
+
+								$sql = "UPDATE books
+									SET books.amount = books.amount + 1
+									WHERE books.id = '$id_book'
+								";
+								pushSQLtoDB($dbh, $sql);
+
 								getSuccsess('Книга успешно сдана');
 							}
 							else {
@@ -81,12 +88,6 @@
 						else {
 							getError('Необходимо заполнить все поля!');
 						}
-
-						// $sql = "SELECT books.id FROM issue
-						// 	WHERE books.id = '$id'
-						// ";
-
-						// $result = pushSQLtoDB($dbh, $sql);
 					}
 				?>
 			</div>
