@@ -90,13 +90,6 @@
 									$result = pushSQLtoDB($dbh, $sql);
 
 									getSuccsess('Книга выдана');
-
-									$titleForTable = array(
-										"id_reader" =>	"ID Читателя",
-										"id_book" =>	"ID Книги",
-										"date_s" =>	"Дата взятия книги",
-									);
-									getTable($result, $titleForTable);
 								}
 								else {
 									getError("Увы, данные книги у нас закончились...");

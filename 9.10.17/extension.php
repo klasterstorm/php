@@ -89,7 +89,7 @@
             foreach($result as $row) {
                 echo '<tr>';
                 foreach($keys as $index) {
-                    if ($row['date_s'] <> NULL && $row['date_s'] < date('Y-m-d', strtotime("-3 days"))) {
+                    if ($row['date_s'] <> NULL && $row['date_s'] < date('Y-m-d', strtotime("-1 days"))) {
                         echo '<td class="content-table-errorRow">',$row[$index] ,'</td>';
                     }
                     else {

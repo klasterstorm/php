@@ -37,7 +37,7 @@
 						LEFT JOIN authors ON authors.id = books.id_author 
 						LEFT JOIN readers ON readers.id = issue.id_readeR 
 						WHERE issue.date_e IS NULL 
-						AND issue.date_s < CURRENT_DATE - INTERVAL 3 DAY
+						AND issue.date_s < CURRENT_DATE - INTERVAL 1 DAY
 					";
 
 					$result = pushSQLtoDB($dbh, $sql);

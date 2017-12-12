@@ -36,6 +36,7 @@
 						CROSS JOIN books ON issue.id_book = books.id
 						CROSS JOIN authors ON books.id_author = authors.id
 						CROSS JOIN readers ON issue.id_reader = readers.id
+						WHERE issue.date_e IS NULL
 					";
 
 					$result = pushSQLtoDB($dbh, $sql);
