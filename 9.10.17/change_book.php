@@ -25,9 +25,14 @@
 			</div>
 			<!-- Контент -->
 			<div class="medium-9 large-9 cell">
-				<h3 class="medium-9 large-9 cell content-title">Поиск книги</h3>
-				<form action="books.php" method="post">
+				<h3 class="medium-9 large-9 cell content-title">Изменить книгу</h3>
+				<form action="change_book.php" method="post">
 					<div class="grid-x grid-margin-x">
+
+						<div class="small-6 medium-6 large-12 cell">
+							<input class="content-input" name="id" placeholder="ID Книги" value="" aria-describedby="name-format">
+						</div>
+
 						<div class="small-12 medium-6 large-6 cell">
 							<input class="content-input" name="author" placeholder="Автор" value="" aria-describedby="name-format">
 						</div>
@@ -44,15 +49,8 @@
 							<input class="content-input" name="price" placeholder="Цена" value="" aria-describedby="name-format">
 						</div>
 
-						<div class="small-12 medium-6 large-6 cell">
-							<div class="content-checkBox">
-								<input id="amountTrue" name="amount" type="checkbox">
-								<label for="amountTrue">Наличие</label>
-							</div>
-						</div>
-
-						<div class="small-12 medium-6 large-6 cell">
-							<button class="content-button" type="submit" value="Submit">Поиск</button>
+						<div class="small-12 medium-3 large-3 cell">
+							<button class="content-button" type="submit" value="Submit">Изменить</button>
 						</div>
 					</div>
 				</form>
@@ -62,34 +60,48 @@
 					$dbh = pdoConnect();
 
 					if (!empty($_POST)){
+						$id = $_POST['id'];
 						$author = $_POST['author'];
 						$title = $_POST['title'];
 						$genre = $_POST['genre'];
 						$price = $_POST['price'];
-						$amount = $_POST['amount'];
 
-						$sql = "SELECT books.title, books.amount, books.price, authors.name AS author, 
-							genre.name AS genre FROM books
-							CROSS JOIN authors ON books.id_author = authors.id
-							CROSS JOIN genre ON books.id_genre = genre.id
-							WHERE authors.name = CASE WHEN '$author' <> '' THEN '$author' ELSE authors.name END
-							AND books.title = CASE WHEN '$title' <> '' THEN '$title' ELSE books.title END
-							AND genre.name = CASE WHEN '$genre' <> '' THEN '$genre' ELSE genre.name END
-							AND books.price = CASE WHEN '$price' <> '' THEN '$price' ELSE books.price END
-							AND amount > CASE WHEN '$amount' = 'on' THEN 0 ELSE -1 END
+						$sql = "SELECT books.id FROM books
+							WHERE books.id = '$id'
 						";
 
 						$result = pushSQLtoDB($dbh, $sql);
 
-						$titleForTable = array(
-							"author"  => "Автор",
-							"title"  => "Название книги",
-							"genre"  => "Жанр",
-							"amount"  => "Количество",
-							"price"  => "Цена"
-						);
-						getTable($result, $titleForTable);
+						//Проверка на заполнение полей
+						if($id){
 
+							//Есть ли книга с таким ID
+							if($result) {
+								//Получаю ID Автора
+								$id_author = getIDAuthor($dbh,$author);
+								
+								//Получаю ID Жанра
+								$id_genre = getIDGenre($dbh,$genre);
+
+								//Меняю данные в таблице на нужные
+								$sql = "UPDATE books 
+									SET books.id_author = '$id_author',
+									books.title = '$title',
+									books.id_genre = '$id_genre',
+									books.price = '$price'
+									WHERE books.id = '$id'
+								";
+
+								pushSQLtoDB($dbh, $sql);
+								getSuccsess('Книга с ID '.$id.' успешно изменена');
+							}
+							else {
+								getError('Книги с ID '.$id.' не найдена');
+							}
+						}
+						else {
+							getError('Необходимо заполнить все поля');
+						}
 					}
 				?>
 			</div>

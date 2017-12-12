@@ -28,7 +28,7 @@
 				<h3 class="medium-9 large-9 cell content-title">Список взятых книг</h3>
 				<?php
 					@include 'extension.php';
-					$dbh = dboConnect();
+					$dbh = pdoConnect();
 
 					$sql = "SELECT authors.id, books.title, books.id_author, issue.date_s, issue.id_reader, readers.id, readers.name AS reader_name,
 						authors.name AS author_name,

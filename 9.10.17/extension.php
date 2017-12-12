@@ -8,21 +8,16 @@
         return $result;
     }
 
-    //Изменение в DB
-    function setSQLtoDB($dbh, $sql) {
-        $sth = $dbh->prepare($sql);
-        $sth->execute();
-        $result = $sth->fetchAll();
-    }
-
     //Поключение к базе данных
-    function dboConnect() {
-        $user = "root";
-        $pass = "root";
+    function pdoConnect() {
+        $user = 'root';
+        $pass = 'root';
+        $dbName = 'php';
+
         try {
-            $dbh = new PDO('mysql:host=localhost;dbname=php;charset=utf8', $user, $pass);
+            $dbh = new PDO('mysql:host=localhost;dbname='.$dbName.';charset=utf8', $user, $pass);
         } catch (PDOException $e) {
-            die('Подключение не удалось: ' . error($e->getMessage()));
+            die(getError($e->getMessage()));
         }
         return $dbh;
     }
@@ -50,8 +45,14 @@
 
     //Получение значения по ключу
     function getValue($result, $key) {
-        foreach($result as $row) {
-            return $row[$key];
+        if($result) {
+            foreach($result as $row) {
+                return $row[$key];
+            }
+        }
+        else {
+            getError('Не могу получить значение по ключу '.$key);
+            getError(var_dunp($result));
         }
     }
 
@@ -111,5 +112,67 @@
             getError("Упс, кажется у нас нет информации по вашим данным...");
         }
     }
+
+
+    //Две нижние функции можно объединить в 1 универсальную, но мне лень
+
+    //Получение ID автора
+
+    //Если автора нет, то добавляем его в базу авторов. Получаем его ID
+    //Если автор есть, получаем его ID
+    function getIDAuthor($dbh,$author) {
+        //Поиск автора в базе
+        $result = pushSQLtoDB($dbh,
+        "SELECT authors.name FROM authors
+            WHERE authors.name = CASE WHEN '$author' <> '' THEN '$author' ELSE authors.name END
+        ");
+
+        //Если автора нет в базе
+        //Добавляем его
+        if(!$result){
+            $sql = "INSERT INTO authors (name) VALUES ('$author')";
+            pushSQLtoDB($dbh, $sql);
+            getSuccsess('Автор '.$author.' добавлен в базу');
+        }
+
+        //Получаем ID автора
+        $sql = "SELECT authors.id, authors.name FROM authors
+            WHERE authors.name = '$author'
+        ";
+
+        $result = pushSQLtoDB($dbh,$sql);
+        $id_author = getValue($result, 'id');
+
+        return $id_author;
+    }
+
+    //Получение ID жанра
+
+    //Если жанра нет, то добавляем его в базу жанров. Получаем его ID
+    //Если жанр есть, получаем его ID
+    function getIDGenre($dbh,$genre) {
+        $sql = "SELECT genre.name FROM genre
+            WHERE genre.name = CASE WHEN '$genre' <> '' THEN '$genre' ELSE genre.name END
+        ";
+        $result = pushSQLtoDB($dbh,$sql);
+
+        //Есть ли Жанр в базе
+        if(!$result){
+            $sql = "INSERT INTO genre (name) VALUES ('$genre')";
+            pushSQLtoDB($dbh, $sql);
+            getSuccsess('Жанр '.$genre.' добавлен в базу');
+        }
+
+        //Получаем ID жанра
+        $sql = "SELECT genre.id, genre.name FROM genre
+            WHERE genre.name = '$genre'
+        ";
+
+        $result = pushSQLtoDB($dbh,$sql);
+        $id_genre = getValue($result, 'id');
+
+        return $id_genre;
+    }
+
 
 ?>

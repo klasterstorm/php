@@ -52,7 +52,7 @@
 
 				<?php
 					@include 'extension.php';
-					$dbh = dboConnect();
+					$dbh = pdoConnect();
 
 					if (!empty($_POST)){
 						$author = $_POST['author'];
@@ -74,11 +74,6 @@
 							//Существует ли книга с таким Автором и Жанром
 							if($result) {
 								getSuccsess('Данная книга уже существует');
-								$titleForTable = array(
-									"id"  => "ID",
-									"author"  => "Автор",
-									"title"  => "Название книги",
-								);
 
 								$sql = "SELECT books.id, books.title, authors.name AS author FROM books
 									CROSS JOIN authors ON books.id_author = authors.id
@@ -87,56 +82,30 @@
 								";
 								$result = pushSQLtoDB($dbh, $sql);
 								$id_book = getValue($result, 'id');
-								
+
 								//Увеличиваем кол-во книг
 								$sql = "UPDATE books SET books.amount = books.amount + 1 WHERE books.id = '$id_book'";
 								pushSQLtoDB($dbh, $sql);
 
-								getSuccsess('Количество данных книг увеличино');
+								getSuccsess('Количество данных книг увеличино на 1');
+
+								$titleForTable = array(
+									"id"  => "ID",
+									"author"  => "Автор",
+									"title"  => "Название книги",
+								);
 								getTable($result, $titleForTable);
 							}
 							else {
+								//Получаю ID Автора
+								$id_author = getIDAuthor($dbh,$author);
 
-								$result = pushSQLtoDB($dbh,
-								"SELECT authors.name FROM authors
-									WHERE authors.name = CASE WHEN '$author' <> '' THEN '$author' ELSE authors.name END
-								");
-
-								//Есть ли Автор в базе
-								if(!$result){
-									$sql = "INSERT INTO authors (name) VALUES ('$author')";
-									pushSQLtoDB($dbh, $sql);
-									getSuccsess('Автор '.$author.' добавлен в базу');
-								}
-								
-								//Получаем ID автора
-								$sql = "SELECT authors.id, authors.name FROM authors
-									WHERE authors.name = CASE WHEN '$author' <> '' THEN '$author' ELSE authors.name END
-								";
-								$result = pushSQLtoDB($dbh,$sql);
-								$id_author = getValue($result, 'id');
-
-								$sql = "SELECT genre.name FROM genre
-									WHERE genre.name = CASE WHEN '$genre' <> '' THEN '$genre' ELSE genre.name END
-								";
-								$result = pushSQLtoDB($dbh,$sql);
-
-								//Есть ли Жанр в базе
-								if(!$result){
-									$sql = "INSERT INTO genre (name) VALUES ('$genre')";
-									pushSQLtoDB($dbh, $sql);
-									getSuccsess('Жанр '.$genre.' добавлен в базу');
-								}
-
-								//Получаем ID жанра
-								$sql = "SELECT genre.id, genre.name FROM genre
-									WHERE genre.name = CASE WHEN '$genre' <> '' THEN '$genre' ELSE genre.name END
-								";
-								$result = pushSQLtoDB($dbh,$sql);
-								$id_genre = getValue($result, 'id');
+								//Получаю ID Жанра
+								$id_genre = getIDGenre($dbh,$genre);
 
 								//Добавляем книгу в базу
 								$sql = "INSERT INTO books (id_author, title, id_genre, price, amount) VALUES ('$id_author', '$title', '$id_genre', '$price', '1')";
+				
 								pushSQLtoDB($dbh, $sql);
 								getSuccsess('Книга добавлена');
 							}

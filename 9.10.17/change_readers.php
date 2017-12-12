@@ -25,8 +25,8 @@
 			</div>
 			<!-- Контент -->
 			<div class="medium-9 large-9 cell">
-				<h3 class="medium-9 large-9 cell content-title">Поиск читателя</h3>
-				<form action="readers.php" method="post">
+				<h3 class="medium-9 large-9 cell content-title">Изменить читателя</h3>
+				<form action="change_readers.php" method="post">
 					<div class="grid-x grid-margin-x">
 						<div class="medium-6 large-6 cell">
 							<input class="content-input" name="id" placeholder="ID" value="" aria-describedby="name-format">
@@ -45,7 +45,7 @@
 						</div>
 
 						<div class="medium-3 large-3 cell">
-							<button class="content-button" type="submit" value="Submit">Найти</button>
+							<button class="content-button" type="submit" value="Submit">Изменить</button>
 						</div>
 
 					</div>
@@ -62,21 +62,35 @@
 						$email = $_POST['email'];
 						$phone = $_POST['phone'];
 
-						$sql = "SELECT * FROM readers WHERE 
-								id = CASE WHEN '$id' <> '' THEN '$id' ELSE id END
-								AND name = CASE WHEN '$name' <> '' THEN '$name' ELSE name END
-								AND email = CASE WHEN '$email' <> '' THEN '$email' ELSE email END
-								AND phone = CASE WHEN '$phone' <> '' THEN '$phone' ELSE phone END";
+						//Проверка на заполнение полей
+						if($id) {
+							$sql = "SELECT readers.id
+								FROM readers
+								WHERE readers.id = '$id'
+							";
+							$result = pushSQLtoDB($dbh, $sql);
 
-						$result = pushSQLtoDB($dbh, $sql);
+							//Есть ли пользователь с таким ID
+							if($result) {
 
-						$titleForTable = array(
-							"id"    => "ID",
-							"name"  => "Название",
-							"email"  => "Почта",
-							"phone"  => "Номер телефона",
-						);
-						getTable($result, $titleForTable);
+								//Меняю данные в таблице на нужные
+								$sql = "UPDATE readers 
+									SET readers.name = '$name',
+									readers.email = '$email',
+									readers.phone = '$phone'
+									WHERE readers.id = '$id'
+								";
+								pushSQLtoDB($dbh, $sql);
+
+								getSuccsess('Данные читателя с ID '.$id.' изменены!');
+							}
+							else {
+								getError('Нет читателя с таким ID '.$id);
+							}
+						}
+						else {
+							getError('Необходимо заполнить все поля');
+						}
 					}
 				?>
 			</div>

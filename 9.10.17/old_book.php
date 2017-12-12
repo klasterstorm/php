@@ -28,7 +28,7 @@
 				<h3 class="medium-9 large-9 cell content-title">Просроченные книги</h3>
 				<?php
 					@include 'extension.php';
-					$dbh = dboConnect();
+					$dbh = pdoConnect();
 
 					$sql = "SELECT issue.date_s, issue.id_book, books.title AS title, 
 						authors.name AS author_name, 

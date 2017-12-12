@@ -45,7 +45,7 @@
 
 				<?php
 					@include 'extension.php';
-					$dbh = dboConnect();
+					$dbh = pdoConnect();
 
 					if (!empty($_POST)){
 						$id_reader = $_POST['id_reader'];
@@ -73,14 +73,14 @@
 								if($result <> NULL) {
 									//Отнимаем книгу
 									$sql = "UPDATE books SET books.amount = books.amount - 1 WHERE books.id = '$id_book'";
-									setSQLtoDB($dbh, $sql);
+									pushSQLtoDB($dbh, $sql);
 
 									date_default_timezone_set('Asia/Vladivostok');
 									$date = date('Y-m-d', time());
 
 									//Вставляем запись
 									$sql = "INSERT INTO issue (id_reader, id_book, date_s, date_e) VALUES ($id_reader, $id_book, '$date', NULL)";
-									setSQLtoDB($dbh, $sql);
+									pushSQLtoDB($dbh, $sql);
 
 									//Выводим
 									$sql = "SELECT * FROM issue WHERE
