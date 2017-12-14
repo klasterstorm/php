@@ -52,7 +52,7 @@
         }
         else {
             getError('Не могу получить значение по ключу '.$key);
-            getError(var_dunp($result));
+            getError(var_dump($result));
         }
     }
 
@@ -157,6 +157,7 @@
         $result = pushSQLtoDB($dbh,$sql);
 
         //Есть ли Жанр в базе
+        //Добавляем его
         if(!$result){
             $sql = "INSERT INTO genre (name) VALUES ('$genre')";
             pushSQLtoDB($dbh, $sql);
