@@ -72,7 +72,7 @@
 
 						$titleForTable = array(
 							"id"    => "ID",
-							"name"  => "Название",
+							"name"  => "Имя",
 							"email"  => "Почта",
 							"phone"  => "Номер телефона",
 						);

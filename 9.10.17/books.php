@@ -28,6 +28,11 @@
 				<h3 class="medium-9 large-9 cell content-title">Поиск книги</h3>
 				<form action="books.php" method="post">
 					<div class="grid-x grid-margin-x">
+
+						<div class="small-12 medium-12 large-12 cell">
+							<input class="content-input" name="id" placeholder="ID Книги" value="" aria-describedby="name-format">
+						</div>
+
 						<div class="small-12 medium-6 large-6 cell">
 							<input class="content-input" name="author" placeholder="Автор" value="" aria-describedby="name-format">
 						</div>
@@ -62,13 +67,14 @@
 					$dbh = pdoConnect();
 
 					if (!empty($_POST)){
+						$id = $_POST['id'];
 						$author = $_POST['author'];
 						$title = $_POST['title'];
 						$genre = $_POST['genre'];
 						$price = $_POST['price'];
 						$amount = $_POST['amount'];
 
-						$sql = "SELECT books.title, books.amount, books.price, authors.name AS author, 
+						$sql = "SELECT books.id, books.title, books.amount, books.price, authors.name AS author, 
 							genre.name AS genre FROM books
 							CROSS JOIN authors ON books.id_author = authors.id
 							CROSS JOIN genre ON books.id_genre = genre.id
@@ -76,12 +82,14 @@
 							AND books.title = CASE WHEN '$title' <> '' THEN '$title' ELSE books.title END
 							AND genre.name = CASE WHEN '$genre' <> '' THEN '$genre' ELSE genre.name END
 							AND books.price = CASE WHEN '$price' <> '' THEN '$price' ELSE books.price END
+							AND books.id = CASE WHEN '$id' <> '' THEN '$id' ELSE books.id END
 							AND amount > CASE WHEN '$amount' = 'on' THEN 0 ELSE -1 END
 						";
 
 						$result = pushSQLtoDB($dbh, $sql);
 
 						$titleForTable = array(
+							"id" => "ID",
 							"author"  => "Автор",
 							"title"  => "Название книги",
 							"genre"  => "Жанр",
